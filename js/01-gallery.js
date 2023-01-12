@@ -31,6 +31,8 @@ function delateModalImg({ key }) {
 
 function createModalImg(e) {    
     e.preventDefault()
+    if (e.target.nodeName !== `IMG`)
+        return;
      instance = basicLightbox.create(`<img src="${e.target.dataset.source}" >`)
     instance.show() 
     gallery.addEventListener("keydown", delateModalImg)    
