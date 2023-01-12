@@ -1,38 +1,37 @@
 import { galleryItems } from './gallery-items.js';
 // Change code below this line
 
-console.log(galleryItems);
+const gallery = document.getElementsByClassName("gallery")[0]
+let instance
 
-const galleryContainer = document.querySelector(".gallery");
+createImages(galleryItems)
 
-const markup = galleryItems.map(({ preview, original, description }) =>
-`<div class="gallery__item">
-  <a class="gallery__link" href="large-image.jpg">
-    <img
-      class="gallery__image"
+gallery.addEventListener("click", createModalImg)
+
+function createImages(e) {
+   const images = e.reduce ((arr,{ preview, original, description }) => {
+       return arr + `<a class="gallery__link" href="${original}"><img class="gallery__image"
       src="${preview}"
       data-source="${original}"
       alt="${description}"
-    />
-  </a>
-</div>`).join("");
+    /></a> ` 
+   },"")
+    gallery.insertAdjacentHTML('beforeend', images)    
+};
 
-galleryContainer.insertAdjacentHTML('beforeend', markup);
-console.log(markup);
 
-galleryContainer.addEventListener('click', onclick);
-
-function onclick(evt) {
-    evt.preventDefault();
-
-    const instance = basicLightbox.create(`
-        <div class="modal">
-            <img src="https://cdn.pixabay.com/photo/2019/05/14/16/43/himilayan-blue-poppy-4202825_1280.jpg" width="800" height="600">
-        </div> `, {
-    onShow: (instance) => {
-        instance.element().querySelector('a').onclick = instance.close
+function delateModalImg({ key }) {   
+    
+    if (key === "Escape") {        
+        instance.close()
+        gallery.removeEventListener("keydown", delateModalImg)   
     }
-})
-}
+    
+};
 
-    instance.show()
+function createModalImg(e) {    
+    e.preventDefault()
+     instance = basicLightbox.create(`<img src="${e.target.dataset.source}" >`)
+    instance.show() 
+    gallery.addEventListener("keydown", delateModalImg)    
+};
